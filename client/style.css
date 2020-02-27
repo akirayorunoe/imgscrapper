@@ -12,6 +12,10 @@ body{
     display:flex;
     justify-content: center;
 }
+tr{
+    display: block;
+    margin:30;
+}
 h1{
     text-transform: uppercase;
 }

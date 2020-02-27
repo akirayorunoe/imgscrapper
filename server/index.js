@@ -11,21 +11,29 @@ app.use(function(req,res,next){
     res.header("Access-Control-Allow-Headers",'Content-Type')
     next()
 });
-
+const links=[];
 
 app.get('/links', (req, res) => 
 {
-    const links=[{
-        link:'https://img2.gelbooru.com/samples/ed/a8/sample_eda8d74f2c7175bad8182ec7595cdbc8.jpg',     
-    },{
-        link:'https://img2.gelbooru.com/samples/ed/a8/sample_eda8d74f2c7175bad8182ec7595cdbc8.jpg',
-        }]
+    console.log('connected')
+    // [{
+    //     link:'https://img2.gelbooru.com/samples/ed/a8/sample_eda8d74f2c7175bad8182ec7595cdbc8.jpg',     
+    // },{
+    //     link:'https://img2.gelbooru.com/samples/ed/a8/sample_eda8d74f2c7175bad8182ec7595cdbc8.jpg',
+    //     }]
     res.send(links)
 })
 
 app.post('/links', (req, res) => {
-console.log(req.body)
-//
-res.send('success')
+console.log(req.body.link)
+const linkData=scrapper(req.body.link).then((data)=>{
+    for(let i of data)
+    {
+        links.push(i)
+    }
+    console.log(links)
+    res.send(links)
 })
+})
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
