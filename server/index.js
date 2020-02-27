@@ -11,8 +11,7 @@ app.use(function(req,res,next){
     res.header("Access-Control-Allow-Headers",'Content-Type')
     next()
 });
-const links=[];
-
+const links=[]
 app.get('/links', (req, res) => 
 {
     console.log('connected')
@@ -21,18 +20,25 @@ app.get('/links', (req, res) =>
     // },{
     //     link:'https://img2.gelbooru.com/samples/ed/a8/sample_eda8d74f2c7175bad8182ec7595cdbc8.jpg',
     //     }]
-    res.send(links)
+    //res.send(links)
 })
 
 app.post('/links', (req, res) => {
 console.log(req.body.link)
+if(req.body.download) {
+    links.forEach(i => {
+        download(i)
+    });
+    res.send('download success')
+    return;
+}
 const linkData=scrapper(req.body.link).then((data)=>{
     for(let i of data)
     {
         links.push(i)
     }
-    console.log(links)
     res.send(links)
+    console.log(data,'done')
 })
 })
 

@@ -22,9 +22,11 @@ function createLoading(loading)
 }
 
 async function loadLinks(){
-    createLoading();
-    const res=await fetch('http://localhost:3000/links')
+    //createLoading();
+    debugger;
+    const res=await fetch('http://localhost:3000/links').then(x=>console.log('2'));
     const links=await res.json();
+    console.log(links)
     await links.forEach(link => {
         const tr=document.createElement('tr');
         const td1=document.createElement('td');
@@ -37,8 +39,8 @@ async function loadLinks(){
         tr.appendChild(td2);
         table.appendChild(tr);
         container.appendChild(table);
-        doneLoading();
-        createLoading()
+        //doneLoading();
+        //createLoading()
         })
 }
 
@@ -58,7 +60,7 @@ linkInput.addEventListener("keydown", function(event) {
     submitLink();
 })
 
-function submitLink()
+async function submitLink()
 {
     const h2=document.querySelector('h2')
     if(h2) return;
@@ -68,7 +70,7 @@ function submitLink()
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({link})
     })
-    loadLinks();
+    await loadLinks();
 }
 
 function download()
@@ -82,6 +84,12 @@ function download()
 //     console.log(link.download,link.href,'download')
 //     link.click();
 // })
+const download='download'
+fetch('http://localhost:3000/links',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({download})
+    })
 }
 
 function sDownload()

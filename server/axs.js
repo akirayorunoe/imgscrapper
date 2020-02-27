@@ -4,7 +4,7 @@ const axios =require('axios')
 
 async function download(link){
     const url=link;
-    const path=Path.resolve(__dirname,'files','a.jpg')
+    const path=Path.resolve(__dirname,'files',`${link.split('/').pop()}`)
     const response=await axios({
         method:'GET',
         url:url,
