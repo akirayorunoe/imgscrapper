@@ -22,25 +22,12 @@ function createLoading(loading)
 }
 
 async function loadLinks(){
-    //createLoading();
     debugger;
     const res=await fetch('http://localhost:3000/links').then(x=>console.log('2'));
     const links=await res.json();
-    console.log(links)
     await links.forEach(link => {
-        const tr=document.createElement('tr');
-        const td1=document.createElement('td');
-        const td2=document.createElement('td');
-        const selection = newEl('input',{type:'checkbox',onclick:"onCheck()"});
         const textLink = newEl('a',{href:link,innerText:link});
-        td1.appendChild(selection);
-        td2.appendChild(textLink);
-        tr.appendChild(td1);
-        tr.appendChild(td2);
-        table.appendChild(tr);
-        container.appendChild(table);
-        //doneLoading();
-        //createLoading()
+       container.append(textLink);
         })
 }
 
@@ -75,15 +62,6 @@ async function submitLink()
 
 function download()
 { 
-// const getLink=document.querySelectorAll('a')
-// getLink.forEach(link=>{
-//     let filename = link.href.split('/').pop();
-//     link.setAttribute('download',filename)
-//     link.addEventListener('click',e=>{e.preventDefault()
-//     });
-//     console.log(link.download,link.href,'download')
-//     link.click();
-// })
 const download='download'
 fetch('http://localhost:3000/links',{
         method:'POST',

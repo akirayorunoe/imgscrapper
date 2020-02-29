@@ -15,12 +15,6 @@ const links=[]
 app.get('/links', (req, res) => 
 {
     console.log('connected')
-    // [{
-    //     link:'https://img2.gelbooru.com/samples/ed/a8/sample_eda8d74f2c7175bad8182ec7595cdbc8.jpg',     
-    // },{
-    //     link:'https://img2.gelbooru.com/samples/ed/a8/sample_eda8d74f2c7175bad8182ec7595cdbc8.jpg',
-    //     }]
-    //res.send(links)
 })
 
 app.post('/links', (req, res) => {
@@ -32,7 +26,7 @@ if(req.body.download) {
     res.send('download success')
     return;
 }
-const linkData=scrapper(req.body.link).then((data)=>{
+scrapper(req.body.link).then((data)=>{
     for(let i of data)
     {
         links.push(i)

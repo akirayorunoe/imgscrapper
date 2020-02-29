@@ -1,24 +1,87 @@
-
 const puppeteer = require('puppeteer');
-async function scrapeLink(url){
 
+async function scrapeLink(url){
         const browser =await puppeteer.launch()
-        const page=await browser.newPage()
-    await page.goto(url)
-    await page.waitFor(10000)// chờ 1 khoảng thời gian để page load
-    await page.waitForSelector('img',{//Chờ selector xuất hiện
-        visible:true
-    }).catch((err)=>{console.log('error slector',err)})
-    //Execute code in DOM
-    const data =await page.evaluate(()=>{
+        const page=await browser.newPage()        
+        await page.goto(url)
+        await page.waitFor(1000)// chờ 1 khoảng thời gian để page load
+    if(checkCafe(url)){
+        await page.exposeFunction('generateLink', (url, page) => {
+            const arr = url.split('/');
+            arr.pop()
+            const t=arr.push(page)
+            return arr.join('/');
+         });
+         await page.exposeFunction('stringIncrease', (str) => {
+            let num=Number(str);
+            while(String(num).length<str.length){
+            let s='0';
+            num=s+num;
+            };
+            return String(num);
+         });
+        const data=await page.evaluate(async (url)=>{
+            const cafeArray=[];
+            const options=document.querySelectorAll('option');
+            const max=options[options.length-1].innerText//lấy text số(string)
+            let char=1;
+               while(char<=Number(max))
+                {
+                    link=await window.generateLink(url, await stringIncrease(String(char),Number(max)));
+                    cafeArray.push(link);
+                    char++;
+                }
+                return cafeArray;
+            },url)
+            const urls=await getSrc(data);
+            await browser.close();
+            return urls;
+        }
+    else
+    {
+        await page.waitForSelector('img',{//Chờ selector xuất hiện
+            visible:true
+        }).catch((err)=>{console.log('error selector',err)})
+        //Execute code in DOM
+        const data =await page.evaluate(()=>{
         const images=document.querySelectorAll('img')
         const urls=Array.from(images).map(v=>v.src)
-        return urls;
-    })
-    //console.log('data:',data)
-    return data;
+            return urls;
+        })
+        await browser.close();
+        return data;
+    }
 }
-    
+ 
+function checkCafe(url){
+    const arr=url.split('/');
+    if(arr.includes('hentai.cafe'))
+    {
+        return true;
+    }
+    return false;
+}
 
 
+async function getSrc(arr)
+{
+    const newArr=[]
+    for(i of arr)
+    {
+        const browser =await puppeteer.launch()
+        const page=await browser.newPage()   
+        await page.goto(i)
+        //await page.waitFor(500)// chờ 1 khoảng thời gian để page load
+        await page.waitForSelector('img',{//Chờ selector xuất hiện
+            visible:true
+        }).catch((err)=>{console.log('error selector',err)})
+        const url = await page.evaluate(()=>{
+            const image=document.querySelector('img')
+            return image.src;
+            })
+            newArr.push(url)
+        await browser.close()//
+    }
+    return newArr;
+}
 module.exports=scrapeLink;
