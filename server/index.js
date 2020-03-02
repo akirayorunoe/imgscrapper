@@ -20,8 +20,8 @@ app.get('/links', (req, res) =>
 app.post('/links', (req, res) => {
 console.log(req.body.link)
 if(req.body.download) {
-    links.forEach(i => {
-        download(i)
+    links.forEach((i,index) => {
+        download(i,index)
     });
     res.send('download success')
     return;
@@ -32,7 +32,7 @@ scrapper(req.body.link).then((data)=>{
         links.push(i)
     }
     res.send(links)
-    console.log(data,'done')
+    console.log('done')
 })
 })
 

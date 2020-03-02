@@ -4,7 +4,7 @@ async function scrapeLink(url){
         const browser =await puppeteer.launch()
         const page=await browser.newPage()        
         await page.goto(url)
-        await page.waitFor(1000)// chờ 1 khoảng thời gian để page load
+        await page.waitFor(5000)// chờ 1 khoảng thời gian để page load
     if(checkCafe(url)){
         await page.exposeFunction('generateLink', (url, page) => {
             const arr = url.split('/');
@@ -35,10 +35,12 @@ async function scrapeLink(url){
             },url)
             const urls=await getSrc(data);
             await browser.close();
+            //console.log(urls)
             return urls;
         }
     else
     {
+        const arr=[];
         await page.waitForSelector('img',{//Chờ selector xuất hiện
             visible:true
         }).catch((err)=>{console.log('error selector',err)})
@@ -49,6 +51,7 @@ async function scrapeLink(url){
             return urls;
         })
         await browser.close();
+        console.log(data)
         return data;
     }
 }
@@ -71,7 +74,7 @@ async function getSrc(arr)
         const browser =await puppeteer.launch()
         const page=await browser.newPage()   
         await page.goto(i)
-        //await page.waitFor(500)// chờ 1 khoảng thời gian để page load
+        await page.waitFor(500)// chờ 1 khoảng thời gian để page load
         await page.waitForSelector('img',{//Chờ selector xuất hiện
             visible:true
         }).catch((err)=>{console.log('error selector',err)})
@@ -79,6 +82,7 @@ async function getSrc(arr)
             const image=document.querySelector('img')
             return image.src;
             })
+            //console.log(url)
             newArr.push(url)
         await browser.close()//
     }
